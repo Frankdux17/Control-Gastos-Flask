@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}Iniciar sesión · Control de Gastos{% endblock %}
+{% block clase_main %}acceso{% endblock %}
+{% block contenido %}
+<section class="tarjeta-acceso">
+  <h1>Control de Gastos</h1>
+  <p class="sub">Inicia sesión para registrar y revisar tus gastos.</p>
+  <form method="post" action="{{ url_for('login') }}">
+    <label for="usuario">Usuario</label>
+    <input id="usuario" name="usuario" autocomplete="username" required autofocus>
+    <label for="clave">Clave</label>
+    <input id="clave" name="clave" type="password" autocomplete="current-password" required>
+    <button type="submit">Iniciar sesión</button>
+  </form>
+</section>
+{% endblock %}

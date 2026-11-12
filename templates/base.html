@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Control de Gastos{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% if session.usuario %}
+  <header class="barra">
+    <a class="marca" href="{{ url_for('gastos') }}">Control de Gastos</a>
+    <nav>
+      <a href="{{ url_for('gastos') }}" class="{{ 'activo' if request.endpoint == 'gastos' }}">Mis gastos</a>
+      <a href="{{ url_for('reporte') }}" class="{{ 'activo' if request.endpoint == 'reporte' }}">Reporte</a>
+      <a href="{{ url_for('logout') }}" class="salir">Cerrar sesión</a>
+    </nav>
+  </header>
+  {% endif %}
+
+  <main class="{% block clase_main %}contenido{% endblock %}">
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+      {% if mensajes %}
+        <div class="mensajes">
+          {% for categoria, mensaje in mensajes %}
+            <p class="mensaje {{ categoria }}">{{ mensaje }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block contenido %}{% endblock %}
+  </main>
+</body>
+</html>

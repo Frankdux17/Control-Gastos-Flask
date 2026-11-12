@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block titulo %}Página no encontrada{% endblock %}
+{% block contenido %}
+<section class="panel">
+  <h2>Página no encontrada</h2>
+  <p>La dirección no existe. <a href="{{ url_for('inicio') }}">Volver al inicio</a>.</p>
+</section>
+{% endblock %}

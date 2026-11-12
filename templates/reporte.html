@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block titulo %}Reporte · Control de Gastos{% endblock %}
+{% block contenido %}
+<section class="panel">
+  <h2>Reporte de gastos</h2>
+  <form method="get" action="{{ url_for('reporte') }}" class="filtros no-imprimir">
+    <div>
+      <label for="desde">Desde</label>
+      <input id="desde" name="desde" type="date" value="{{ desde }}">
+    </div>
+    <div>
+      <label for="hasta">Hasta</label>
+      <input id="hasta" name="hasta" type="date" value="{{ hasta }}">
+    </div>
+    <button type="submit">Filtrar</button>
+    <a class="boton-secundario" href="{{ url_for('reporte') }}">Ver todo</a>
+    <a class="boton-secundario" href="{{ url_for('reporte_csv', desde=desde, hasta=hasta) }}">Descargar CSV</a>
+    <button type="button" class="boton-secundario" onclick="window.print()">Imprimir</button>
+  </form>
+
+  <p class="periodo">
+    Periodo: {{ desde or 'inicio' }} al {{ hasta or 'hoy' }}
+  </p>
+
+  <div class="resumen">
+    <div class="total-grande">
+      <span class="etiqueta">Total gastado</span>
+      <span class="cifra">{{ total|soles }}</span>
+    </div>
+    <dl class="datos">
+      <div><dt>Cantidad de gastos</dt><dd>{{ detalle|length }}</dd></div>
+      <div><dt>Promedio por gasto</dt><dd>{{ promedio|soles }}</dd></div>
+      <div><dt>Gasto mayor</dt><dd>{% if mayor %}{{ mayor.descripcion }} ({{ mayor.monto|soles }}){% else %}—{% endif %}</dd></div>
+    </dl>
+  </div>
+
+  {% if detalle %}
+  <h3>Total por mes</h3>
+  <div class="tabla-envoltura">
+    <table>
+      <thead><tr><th>Mes</th><th class="num">Cantidad</th><th class="num">Total</th></tr></thead>
+      <tbody>
+        {% for m in por_mes %}
+        <tr><td>{{ m.mes }}</td><td class="num">{{ m.cantidad }}</td><td class="num">{{ m.total|soles }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Detalle</h3>
+  <div class="tabla-envoltura">
+    <table>
+      <thead><tr><th>Fecha</th><th>Descripción</th><th class="num">Monto</th></tr></thead>
+      <tbody>
+        {% for g in detalle %}
+        <tr><td>{{ g.fecha }}</td><td>{{ g.descripcion }}</td><td class="num">{{ g.monto|soles }}</td></tr>
+        {% endfor %}
+      </tbody>
+      <tfoot><tr><td></td><td>Total</td><td class="num">{{ total|soles }}</td></tr></tfoot>
+    </table>
+  </div>
+  {% else %}
+    <p class="vacio">No hay gastos en este periodo.</p>
+  {% endif %}
+</section>
+{% endblock %}

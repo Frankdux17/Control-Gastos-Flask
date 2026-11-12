@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block titulo %}Mis gastos · Control de Gastos{% endblock %}
+{% block contenido %}
+<div class="rejilla">
+  <section class="panel">
+    <h2>Registrar gasto</h2>
+    <form method="post" action="{{ url_for('gastos') }}" class="formulario">
+      <label for="fecha">Fecha</label>
+      <input id="fecha" name="fecha" type="date" value="{{ hoy }}" required>
+      <label for="descripcion">Descripción</label>
+      <input id="descripcion" name="descripcion" maxlength="100" placeholder="Ej.: Almuerzo, pasaje, recibo de luz" required>
+      <label for="monto">Monto (S/)</label>
+      <input id="monto" name="monto" type="number" step="0.01" min="0.01" placeholder="0.00" required>
+      <button type="submit">Guardar gasto</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <div class="cabecera-tabla">
+      <h2>Gastos registrados</h2>
+      <p class="total-mini">Total: <strong>{{ total|soles }}</strong></p>
+    </div>
+    {% if gastos %}
+    <div class="tabla-envoltura">
+      <table>
+        <thead>
+          <tr><th>Fecha</th><th>Descripción</th><th class="num">Monto</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for g in gastos %}
+          <tr>
+            <td>{{ g.fecha }}</td>
+            <td>{{ g.descripcion }}</td>
+            <td class="num">{{ g.monto|soles }}</td>
+            <td class="acciones">
+              <form method="post" action="{{ url_for('eliminar', gasto_id=g.id) }}"
+                    onsubmit="return confirm('¿Eliminar este gasto?');">
+                <button type="submit" class="boton-eliminar">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      <p class="vacio">Aún no hay gastos. Registra el primero con el formulario.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}
